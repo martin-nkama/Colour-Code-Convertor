@@ -1,0 +1,80 @@
+body {
+    font-family: 'Jost', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.banner {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+label[for="output-type"] {
+    margin-top: 50px; /* Adds space before "Output Type" label */
+}
+
+select, input, button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    height: 40px; /* Adjusts height to make elements taller */
+}
+
+.output-container {
+    display: flex;
+    align-items: center; /* Centers items vertically */
+}
+
+#output-value {
+    flex: 1;
+    margin-right: 10px;
+    height: 40px; /* Ensure height matches other elements */
+    box-sizing: border-box;
+}
+
+#color-display {
+    width: 60px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; /* Ensure padding and border are included in the width and height */
+    margin-left: -5px; /* Add margin to separate from output value */
+    margin-top: -10px; /* Push the color display box upwards */
+}
+
+button.copy-button {
+    margin-top: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    height: auto; 
+}
+
+button.copy-button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

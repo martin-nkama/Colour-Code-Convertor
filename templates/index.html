@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colour Code Converter</title>
+    
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- Banner section -->
+    <div class="banner">
+        <h1>Colour Code Converter</h1>
+    </div>
+    
+    <!-- Main container -->
+    <div class="container">
+
+        <!-- Form for color conversion -->
+        <form id="converter-form">
+
+            <!-- Input type selection -->
+            <label for="input-type">Input Type:</label>
+            <select id="input-type" name="input-type" onchange="updateOutputOptions()">
+                <option value="hex">HEX</option>
+                <option value="rgb">RGB</option>
+                <option value="rgba">RGBA</option>
+                <option value="hsl">HSL</option>
+            </select>
+
+            <!-- Input value field -->
+            <label for="input-value">Input Value:</label>
+            <input type="text" id="input-value" name="input-value" placeholder="e.g. #ff0000">
+
+            <!-- Output type selection -->
+            <label for="output-type">Output Type:</label>
+            <select id="output-type" name="output-type">
+                <option value="rgb">RGB</option>
+                <option value="hex">HEX</option>
+                <option value="rgba">RGBA</option>
+                <option value="hsl">HSL</option>
+            </select>
+
+            <!-- Submit button -->
+            <button type="submit">Convert</button>
+        </form>
+
+        <!-- Output value display -->
+        <label for="output-value">Output Value:</label>
+        <div class="output-container">
+            <input type="text" id="output-value" readonly>
+            <div id="color-display"></div>
+        </div>
+        
+        <!-- Copy button -->
+        <button class="copy-button" onclick="copyToClipboard()">Copy</button>
+    </div>
+
+    <script>
+        // Event listener for form submission
+        document.getElementById('converter-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            convertValue();
+        });
+
+        // Function to convert color values
+        function convertValue() {
+            const inputType = document.getElementById('input-type').value;
+            const inputValue = document.getElementById('input-value').value;
+            const outputType = document.getElementById('output-type').value;
+
+            // Fetch request to server for conversion
+            fetch(`/convert?value=${encodeURIComponent(inputValue)}&type=${inputType}_to_${outputType}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('Error: ' + data.error);
+                    } else {
+                        const outputValue = data[outputType.toLowerCase()];
+                        document.getElementById('output-value').value = outputValue;
+
+                        // Update the color display based on output type
+                        let color = '';
+                        if (outputType === 'hex') {
+                            color = outputValue;
+                        } else if (outputType === 'rgb') {
+                            color = `rgb(${outputValue})`;
+                        } else if (outputType === 'rgba') {
+                            color = `rgba(${outputValue})`;
+                        } else if (outputType === 'hsl') {
+                            // Format HSL value for CSS
+                            color = `hsl(${outputValue[0]}, ${outputValue[1]}%, ${outputValue[2]}%)`;
+                        }
+                        document.getElementById('color-display').style.backgroundColor = color;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Function to copy output value to clipboard
+        function copyToClipboard() {
+            const outputValue = document.getElementById('output-value');
+            outputValue.select();
+            document.execCommand("copy");
+            alert("Copied to clipboard: " + outputValue.value);
+        }
+
+        // Function to update output type options based on selected input type
+        function updateOutputOptions() {
+            const inputType = document.getElementById('input-type').value;
+            const outputTypeSelect = document.getElementById('output-type');
+            const options = outputTypeSelect.options;
+            for (let i = 0; i < options.length; i++) {
+                options[i].disabled = options[i].value === inputType;
+            }
+        }
+
+        // Initialize the options on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateOutputOptions();
+        });
+    </script>
+
+</body>
+</html>
