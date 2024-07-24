@@ -1,4 +1,4 @@
-# Colour Code Converter
+# Colour Code Convertor
 
 - A web application for converting between various color codes (HEX, RGB, RGBA, HSL) with a user-friendly interface to display the converted color and allow copying of the converted code.
 
